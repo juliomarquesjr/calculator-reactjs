@@ -4,7 +4,7 @@ import "./Display.css";
 function Display(props) {
   return (
     <React.Fragment>
-      <div className="display">{props.value || 0}</div>
+      <div className="display">{props.value}</div>
     </React.Fragment>
   );
 }
