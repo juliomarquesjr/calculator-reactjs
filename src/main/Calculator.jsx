@@ -1,47 +1,83 @@
-import React from "react";
+import React, { Component } from "react";
 import "./Calculator.css";
 import Button from "../components/Button";
 import Display from "../components/Display";
 
-function Calculadora() {
-  function clearMemory() {
-    console.log("Limpar");
+const initialState = {
+  displayValue: '0',
+  clearDisplay: false,
+  operator: null,
+  values: [0, 0],
+  current: 0
+};
+
+export default class Calculadora extends Component {
+  state = { ...initialState };
+
+  constructor(props) {
+    super(props);
+
+    this.clearMemory = this.clearMemory.bind(this);
+    this.setOperation = this.setOperation.bind(this);
+    this.addDigit = this.addDigit.bind(this);
   }
 
-  function setOperation(oper) {
+  clearMemory() {
+      this.setState({...initialState})
+  }
+
+  setOperation(oper) {
     console.log("Operação: " + oper);
   }
 
-  function addDigit(digit) {
-    console.log("Digito: " + digit);
+  addDigit(digit) {
+      if(digit === '.' && this.state.displayValue.includes('.')){
+          return
+      }
+ 
+      const clearDisplay = this.state.displayValue === '0' || this.state.clearDisplay
+      const currentValue = clearDisplay ? '' : this.state.displayValue
+      const displayValue = currentValue + digit
+
+      this.setState({displayValue, clearDisplay: false})
+      
+
+      if(digit !== '.'){
+        const i = this.state.current
+        const newValue = parseFloat(displayValue)
+        const values = [...this.state.values]
+        values[i] = newValue
+
+        this.setState({values})
+        console.log(this.state.values)
+      }
+      
   }
 
-  return (
-    <React.Fragment>
-      <div className="calculator">
-        <Display value={100} />
-        <Button label="AC" triple click={() => clearMemory()} />
-
-        {/* Apenas uma forma diferente de declarar usando Arrowfunction*/}
-        <Button label="/" operation click={(event) => setOperation(event)} />
-
-        <Button label="7" click={addDigit} />
-        <Button label="8" click={addDigit} />
-        <Button label="9" click={addDigit} />
-        <Button label="*" operation click={setOperation} />
-        <Button label="4" click={addDigit} />
-        <Button label="5" click={addDigit} />
-        <Button label="6" click={addDigit} />
-        <Button label="-" operation click={setOperation} />
-        <Button label="1" click={addDigit} />
-        <Button label="2" click={addDigit} />
-        <Button label="3" click={addDigit} />
-        <Button label="+" operation click={setOperation} />
-        <Button label="0" double click={addDigit} />
-        <Button label="." click={addDigit} />
-        <Button label="=" operation click={setOperation} />
-      </div>
-    </React.Fragment>
-  );
+  render() {
+    return (
+      <React.Fragment>
+        <div className="calculator">
+          <Display value={this.state.displayValue} />
+          <Button label="AC" triple click={this.clearMemory} />
+          <Button label="/" operation click={this.setOperation} />
+          <Button label="7" click={this.addDigit} />
+          <Button label="8" click={this.addDigit} />
+          <Button label="9" click={this.addDigit} />
+          <Button label="*" operation click={this.setOperation} />
+          <Button label="4" click={this.addDigit} />
+          <Button label="5" click={this.addDigit} />
+          <Button label="6" click={this.addDigit} />
+          <Button label="-" operation click={this.setOperation} />
+          <Button label="1" click={this.addDigit} />
+          <Button label="2" click={this.addDigit} />
+          <Button label="3" click={this.addDigit} />
+          <Button label="+" operation click={this.setOperation} />
+          <Button label="0" double click={this.addDigit} />
+          <Button label="." click={this.addDigit} />
+          <Button label="=" operation click={this.setOperation} />
+        </div>
+      </React.Fragment>
+    );
+  }
 }
-export default Calculadora;
