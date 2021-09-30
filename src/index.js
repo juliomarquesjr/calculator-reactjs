@@ -6,7 +6,6 @@ import Calculator from "./main/Calculator";
 
 ReactDOM.render(
   <React.Fragment>
-    <h1>Calculadora</h1>
     <Calculator />
   </React.Fragment>,
   document.getElementById("root")
