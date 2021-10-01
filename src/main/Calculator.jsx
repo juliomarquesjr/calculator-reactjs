@@ -34,10 +34,22 @@ export default class Calculadora extends Component {
       const currentOperation = this.state.operator
       const values = [...this.state.values]
 
-      try {
-        values[0] = eval(`${values[0]} ${currentOperation} ${values[1]}`)
-      } catch { 
-        values[0] = this.state.values[0] 
+      switch (currentOperation) {
+        case '+':
+          values[0] = values[0] + values[1];
+          break;
+        case '-':
+          values[0] = values[0] + values[1]
+          break;
+        case '*':
+          values[0] = values[0] * values[1]
+          break;
+        case '/':
+          values[0] = values[0] / values[1]
+          break;
+        default:
+          values[0] = this.state.values[0]
+          break;
       }
       values[1] = 0
 
@@ -49,21 +61,17 @@ export default class Calculadora extends Component {
         values
       })
     }
-
-    // console.log("Operação: " + oper);
   }
 
   addDigit(digit) {
     if (digit === '.' && this.state.displayValue.includes('.')) {
       return
     }
-
     const clearDisplay = this.state.displayValue === '0' || this.state.clearDisplay
     const currentValue = clearDisplay ? '' : this.state.displayValue
     const displayValue = currentValue + digit
 
     this.setState({ displayValue, clearDisplay: false })
-
 
     if (digit !== '.') {
       const i = this.state.current
