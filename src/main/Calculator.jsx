@@ -23,35 +23,58 @@ export default class Calculadora extends Component {
   }
 
   clearMemory() {
-      this.setState({...initialState})
+    this.setState({ ...initialState })
   }
 
-  setOperation(oper) {
-    console.log("Operação: " + oper);
+  setOperation(operator) {
+    if (this.state.current === 0) {
+      this.setState({ operator, current: 1, clearDisplay: true })
+    } else {
+      const equals = operator === '='
+      const currentOperation = this.state.operator
+      const values = [...this.state.values]
+
+      try {
+        values[0] = eval(`${values[0]} ${currentOperation} ${values[1]}`)
+      } catch { 
+        values[0] = this.state.values[0] 
+      }
+      values[1] = 0
+
+      this.setState({
+        displayValue: values[0],
+        operator: equals ? null : operator,
+        current: equals ? 0 : 1,
+        clearDisplay: !equals,
+        values
+      })
+    }
+
+    // console.log("Operação: " + oper);
   }
 
   addDigit(digit) {
-      if(digit === '.' && this.state.displayValue.includes('.')){
-          return
-      }
- 
-      const clearDisplay = this.state.displayValue === '0' || this.state.clearDisplay
-      const currentValue = clearDisplay ? '' : this.state.displayValue
-      const displayValue = currentValue + digit
+    if (digit === '.' && this.state.displayValue.includes('.')) {
+      return
+    }
 
-      this.setState({displayValue, clearDisplay: false})
-      
+    const clearDisplay = this.state.displayValue === '0' || this.state.clearDisplay
+    const currentValue = clearDisplay ? '' : this.state.displayValue
+    const displayValue = currentValue + digit
 
-      if(digit !== '.'){
-        const i = this.state.current
-        const newValue = parseFloat(displayValue)
-        const values = [...this.state.values]
-        values[i] = newValue
+    this.setState({ displayValue, clearDisplay: false })
 
-        this.setState({values})
-        console.log(this.state.values)
-      }
-      
+
+    if (digit !== '.') {
+      const i = this.state.current
+      const newValue = parseFloat(displayValue)
+      const values = [...this.state.values]
+      values[i] = newValue
+
+      this.setState({ values })
+      console.log(this.state.values)
+    }
+
   }
 
   render() {
